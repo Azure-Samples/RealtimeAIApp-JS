@@ -1,57 +1,91 @@
-# Project Name
+# Realtime AI App - Language Coach and Medical Form Assistant
 
-(short, 1-3 sentenced, description of the project)
+This project demonstrates how to build a real-time AI application using the Azure OpenAI Realtime API. The demo app features a language coach and a medical form assistant. The language coach allows users to practice speaking a language and get instant feedback on their pronunciation, while the medical form assistant helps users fill out medical forms by conversing with them using their voice.
 
-## Features
+**Language Coach**
 
-This project framework provides the following features:
+![Language Coach Screenshot](images/language-coach.png)
 
-* Feature 1
-* Feature 2
-* ...
+**Medical Form Assistant**
+
+![Medical Form Assistant Screenshot](images/medical-form.png)
 
 ## Getting Started
 
-### Prerequisites
+1. Clone the project.
+2. Create a `gpt-realtime` model deployment in [Azure AI Foundry](https://ai.azure.com).
+3. Rename `.env.example` to `.env` in the root of the project.
+4. Add your `gpt-realtime` endpoint to `OPENAI_ENDPOINT` and your key to `OPENAI_API_KEY`. You can get those values from Azure AI Foundry.
 
-(ideally very short, if any)
+  ```
+  OPENAI_API_KEY=
+  OPENAI_MODEL=gpt-realtime
+  OPENAI_ENDPOINT=
+  OPENAI_API_VERSION=2025-04-01-preview
+  BACKEND=azure
+  ```
 
-- OS
-- Library version
-- ...
+> Note: If you'd like to use OpenAI instead of Azure OpenAI, add your OpenAI API key to `OPENAI_API_KEY` and leave the `OPENAI_ENDPOINT` blank. Remove the value for `BACKEND`.
 
-### Installation
+4. Run `npm install` in the `client` and `server` directories.
+5. Run `npm run dev` in the `server` directory.
+6. Run `npm start` in the `client` directory.
+7. Click the `Connect` button in the browser to get started, allow your microphone to be accessed, and start speaking.
+8. Click the `Disconnect` button to stop the session.
+## Keyless Approach
 
-(ideally very short)
+If you'd like to use the more secure "keyless" approach with Azure OpenAI, run the following command to add the *OpenAI Contributor* role to your user principal. Install the [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) if you don't have it on your machine already.
 
-- npm install [package name]
-- mvn install
-- ...
+```
+az role assignment create \
+  --role "Cognitive Services OpenAI Contributor" \
+  --assignee-object-id "<USER_PRINCIPAL_ID>" \
+  --scope "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>" \
+  --assignee-principal-type User
+```
 
-### Quickstart
-(Add steps to get up and running quickly)
+Add your *subscription ID*, *resource group*, and user *principal ID* (assigness-object-id) to the command above. 
+- Run `az login` and select your target subscription.
+- Get your subscription ID by running `az account list --query "[?isDefault].id" -o tsv`.
+- Find your user principal ID by running `az ad signed-in-user show --query objectId -o tsv` or `az rest --method GET --url "https://graph.microsoft.com/v1.0/me" --query "id"`.
 
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+You can then remove the `OPENAI_API_KEY` value your `.env` file.
 
 
-## Demo
+## Architecture Overview
 
-A demo app is included to show how to use the project.
+The following diagram illustrates the WebSocket communication flow in the `RTSession` class, showing how client messages are processed and relayed to the OpenAI Realtime API.
 
-To run the demo, follow these steps:
+- **Client**: This is you—the user interacting with the app via your browser. It sends audio or text inputs (like saying “Hello” or typing a question) to kick things off. It’s written using Angular.
+-  **RealTime Session**: The Node.js code where the main action takes place – it manages the flow. It uses a client WebSocket to receive your inputs and send back responses, while a RealTime AI WebSocket connects to the OpenAI API. The logic block processes messages, ensuring everything runs smoothly between the client and the AI.
+-  **OpenAI RealTime API**: This is the brains of the operation. It receives audio/text from the Realtime Session, processes it with the gpt-4o-realtime model, and sends back audio/text responses. The app supports calling OpenAI or Azure OpenAI.
 
-(Add steps to start up the demo)
+```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 50, 'rankSpacing': 75}}}%%
+graph TD
+    A[Client] -->|Sends audio/text| B[Client WebSocket]
+    subgraph Realtime_Session["Realtime Session"]
+        B[Client WebSocket]
+        C[Logic]
+        D[Realtime AI WebSocket]
+    end
+    E[OpenAI Realtime API]
 
-1.
-2.
-3.
+    B <-->|Receives responses| C
+    C <-->|Processes messages| D
+    D <-->|Sends audio/text to Azure OpenAI| E
+    E -->|Sends audio/text responses| D
 
-## Resources
+    classDef sessionLabel font-size:20px;
+    class Realtime_Session sessionLabel
 
-(Any additional resources or related projects)
+    style A fill:#f9f,stroke:#333,stroke-width:2px,font-size:20px;
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#dfd,stroke:#333,stroke-width:2px
+    style D fill:#bbf,stroke:#333,stroke-width:2px
+    style E fill:#f9f,stroke:#333,stroke-width:2px
+```
 
-- Link to supporting information
-- Link to similar sample
-- ...
+## Acknowledgements
+
+Thanks to [Steve Sanderson](https://github.com/SteveSandersonMS) for the initial inspiration for this demo.

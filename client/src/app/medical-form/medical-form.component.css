@@ -1,0 +1,156 @@
+.medical-form {
+  padding: 20px;
+  max-width: 800px;
+}
+
+/* Tab and form styling */
+mat-tab {
+  cursor: pointer;
+}
+
+.tab-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tab-content button[mat-stroked-button] {
+  font-size: 12px;
+  line-height: 1;
+  height: 25px;
+  background-color: #44474e;
+  color: #fff;
+}
+
+.tab-content button[mat-stroked-button] .align-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* Icon button styling */
+.icon-only {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+.icon-only .mat-mdc-button-touch-target {
+  height: 24px !important;
+  width: 24px !important;
+}
+
+.icon-only:hover {
+  opacity: 0.9;
+  background: none !important;
+}
+
+/* Symptom section */
+.symptom-group {
+  position: relative;
+  border: 1px solid #efefef;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+
+.symptom-header {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1000;
+}
+
+/* Form field overrides - consolidated */
+:host ::ng-deep .mat-mdc-form-field-focus-overlay,
+:host ::ng-deep .mat-mdc-form-field-flex,
+:host ::ng-deep .mdc-text-field--filled,
+:host ::ng-deep .mdc-text-field--focused {
+  background-color: transparent !important;
+}
+
+/* Label size adjustments - consolidated */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-floating-label,
+:host ::ng-deep .mat-mdc-form-field .mdc-floating-label--float-above {
+  font-size: 12px !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mdc-floating-label--float-above {
+  transform: translateY(-2em) scale(0.75) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  height: 0;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+  gap: 16px;
+}
+
+.form-actions button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #0078d7;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Submission status styling - simplified */
+.submission-status {
+  margin-left: 16px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Chip styling - consolidated */
+mat-chip-listbox {
+  --mat-chip-container-height: 32px;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.submission-status .mat-mdc-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  background-color: rgba(76, 175, 80, 0.1) !important;
+  border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+.submission-status .mat-mdc-chip .mdc-evolution-chip__text-label,
+.submission-status .mat-mdc-chip .mdc-evolution-chip__cell--primary {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.submission-status .mat-mdc-chip mat-icon {
+  color: #4CAF50 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 6px !important;
+  height: 18px !important;
+  width: 18px !important;
+  font-size: 18px !important;
+}

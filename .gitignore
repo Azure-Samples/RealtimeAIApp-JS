@@ -1,0 +1,28 @@
+.angular
+/.angular/cache
+# NPM
+node_modules
+npm-debug.log
+sandboxes.ts
+.claude
+CLAUDE.md
+
+# Code Editor Settings
+.idea
+.vs
+.env
+
+# Build Generated Files
+src/app/**/*.js
+src/app/**/*.js.map
+
+# Ignore any Webpack generated files
+dist
+src/app/devDist
+src/app/dist
+
+cypress/videos/
+cypress/screenshots/
+
+tsconfig.tsbuildinfo
+.DS_Store
