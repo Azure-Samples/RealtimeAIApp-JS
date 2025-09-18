@@ -89,13 +89,3 @@ graph TD
 ## Acknowledgements
 
 Thanks to [Steve Sanderson](https://github.com/SteveSandersonMS) for the initial inspiration for this demo.
-
-## Getting Help
-
-If you get stuck or have any questions about building AI apps, join:
-
-[![Azure AI Foundry Discord](https://img.shields.io/badge/Discord-Azure_AI_Foundry_Community_Discord-blue?style=for-the-badge&logo=discord&color=5865f2&logoColor=fff)](https://aka.ms/foundry/discord)
-
-If you have product feedback or errors while building visit:
-
-[![Azure AI Foundry Developer Forum](https://img.shields.io/badge/GitHub-Azure_AI_Foundry_Developer_Forum-blue?style=for-the-badge&logo=github&color=000000&logoColor=fff)](https://aka.ms/foundry/forum)
