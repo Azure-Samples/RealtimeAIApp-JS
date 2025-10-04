@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Galactic AI Navigator - Repo Adventure</title>
+    <link rel="stylesheet" href="assets/theme.css">
+    <link rel="stylesheet" href="../assets/shared/quest-navigator.css">
+    <link rel="stylesheet" href="../assets/theme-toggle.css">
+    
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "tk53e05gf2");
+    </script>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <!-- Using minimal theme since we override all styles with our custom theme -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Configure Prism autoloader for syntax highlighting
+        if (window.Prism && window.Prism.plugins && window.Prism.plugins.autoloader) {
+            window.Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/';
+        }
+
+        // Trigger Prism highlighting after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Prism) {
+                window.Prism.highlightAll();
+            }
+        });
+    </script>
+</head>
+<body class="theme-space">
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-left">
+                <a href="https://github.com/danwahlin/RealtimeAIApp-JS" target="_blank" rel="noopener noreferrer" class="github-link">
+                    <img src="../assets/shared/github-mark-white.svg" alt="GitHub" width="24" height="24">
+                </a>
+                <a href="index.html">The Galactic AI Navigator</a>
+            </div>
+            <div class="nav-middle">
+            </div>
+            <div class="nav-right">
+                <a href="../index.html" class="nav-link">Change Adventure</a>
+                <a href="#" class="nav-link quest-map-trigger">Quests</a>
+                <button class="theme-toggle-btn" aria-label="Switch to light mode" type="button">
+                    <div class="theme-toggle-slider">
+                        <svg class="toggle-icon sun-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="toggle-icon moon-icon" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="story-content">
+    <h1>The Galactic AI Navigator</h1>
+    <p>In a distant galaxy, aboard the starship <em>Galactic Navigator</em>, a pioneering crew explores the cosmic frontier of real-time AI communication. The ship is equipped with advanced systems to decode stellar audio signals and engage with alien languages, powered by the Azure OpenAI Realtime API. Your mission is to ensure seamless operations across the Navigator’s critical modules: managing interstellar communication, processing cosmic audio streams, and deploying AI personalities to assist the crew in their explorations.</p>
+<p><strong>Adventure Awaits</strong> – Choose your quest wisely, brave adventurer!</p>
+
+</div>
+
+<div class="quests-section">
+    <h2>Choose a Quest</h2>
+    <a href="quest-1.html" class="quest-link">
+  <h3>Command Deck Operations</h3>
+  <p>Navigate the <strong>server.ts</strong> and <strong>session.ts</strong> modules to establish interstellar WebSocket connections and manage AI communication protocols.</p>
+</a>
+<a href="quest-2.html" class="quest-link">
+  <h3>AI Personality Core</h3>
+  <p>Explore the <strong>systemMessages.ts</strong> and <strong>types.ts</strong> modules to configure specialized AI personalities for language decoding, medical assistance, and galactic Q&A.</p>
+</a>
+<a href="quest-3.html" class="quest-link">
+  <h3>Stellar Coordination Systems</h3>
+  <p>Investigate the <strong>realtime-manager.service.ts</strong> and <strong>web-socket.service.ts</strong> modules to synchronize crew interactions with the AI and manage cosmic data streams.</p>
+</a>
+<a href="quest-4.html" class="quest-link">
+  <h3>Audio Signal Processing</h3>
+  <p>Venture into the <strong>recorder.service.ts</strong> and <strong>player.service.ts</strong> modules to capture, transform, and playback stellar audio signals for real-time communication.</p>
+</a>
+<a href="quest-5.html" class="quest-link">
+  <h3>Mission Routing and Controls</h3>
+  <p>Chart courses through the <strong>app.routes.ts</strong>, <strong>medical-form.component.ts</strong>, and <strong>language-coach.component.ts</strong> modules to guide the crew’s missions and interface with AI-powered tools.</p>
+</a>
+</div>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <span>Created using <a href="https://github.com/DanWahlin/ai-repo-adventures" target="_blank" rel="noopener noreferrer" class="repo-link">AI Repo Adventures</a></span>
+        </div>
+    </footer>
+    
+    <!-- Quest Navigator Script (for navbar Quests button functionality) -->
+    <script src="../assets/shared/quest-navigator.js"></script>
+    <!-- Theme Toggle Script (for light/dark mode toggle) -->
+    <script src="../assets/theme-toggle.js"></script>
+</body>
+</html>

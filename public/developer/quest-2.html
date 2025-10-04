@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personality System Messages - Repo Adventure</title>
+    <link rel="stylesheet" href="assets/theme.css">
+    <link rel="stylesheet" href="../assets/shared/quest-navigator.css">
+    <link rel="stylesheet" href="../assets/theme-toggle.css">
+    
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "tk53e05gf2");
+    </script>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <!-- Using minimal theme since we override all styles with our custom theme -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Configure Prism autoloader for syntax highlighting
+        if (window.Prism && window.Prism.plugins && window.Prism.plugins.autoloader) {
+            window.Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/';
+        }
+
+        // Trigger Prism highlighting after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Prism) {
+                window.Prism.highlightAll();
+            }
+        });
+    </script>
+</head>
+<body class="theme-developer">
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-left">
+                <a href="https://github.com/danwahlin/RealtimeAIApp-JS" target="_blank" rel="noopener noreferrer" class="github-link">
+                    <img src="../assets/shared/github-mark.svg" alt="GitHub" width="24" height="24">
+                </a>
+                <a href="index.html">The Real-Time AI Integration Guide</a>
+            </div>
+            <div class="nav-middle">
+            </div>
+            <div class="nav-right">
+                <a href="../index.html" class="nav-link">Change Adventure</a>
+                <a href="#" class="nav-link quest-map-trigger">Quests</a>
+                <button class="theme-toggle-btn" aria-label="Switch to light mode" type="button">
+                    <div class="theme-toggle-slider">
+                        <svg class="toggle-icon sun-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="toggle-icon moon-icon" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="quest-content">
+    <h1>Quest 2: AI Personality System Messages</h1>
+<hr>
+<p>Dive into the heart of the AI personality configurations, where system messages define the behavior and interaction styles of the Language Coach, Medical Form Assistant, and Medical Q&amp;A assistant. These configurations are the backbone of tailored user experiences, enabling dynamic responses and structured outputs based on user input. By exploring these files, you&#39;ll uncover how JSON schemas, system message types, and tools are meticulously orchestrated to support diverse real-time AI applications.</p>
+<h2>Key Takeaways</h2>
+<p>After completing this quest, you will understand:</p>
+<ul>
+<li>🎯 <strong>System Message Design</strong>: How system messages are structured to define AI personalities and behaviors.</li>
+<li>🔍 <strong>Tool Integration</strong>: How tools are tied to system messages for function calling and structured outputs.</li>
+<li>⚡ <strong>JSON Schema Validation</strong>: How schemas enforce data integrity and guide AI interactions.</li>
+<li>💡 <strong>Dynamic Personality Switching</strong>: How the system dynamically selects personalities based on user needs.</li>
+</ul>
+<h2>File Exploration</h2>
+<h3><span class="header-prefix">File:</span> <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts" target="_blank" rel="noopener noreferrer"><code class="inline-code">server/src/systemMessages.ts</code></a></h3>
+<p>This file defines the AI personalities and their corresponding system messages, which dictate the behavior of the Language Coach, Medical Form Assistant, and Medical Q&amp;A assistant. Each personality is configured with specific instructions, rules, and tools to handle its unique use case. The file also includes utility functions for retrieving system messages and constructing JSON schemas for validation.</p>
+<h4>Highlights</h4>
+<ul>
+<li><code class="inline-code">systemMessages</code> contains predefined configurations for each AI personality, including detailed instructions and tool integrations.</li>
+<li><a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L90" target="_blank" rel="noopener noreferrer"><code class="inline-code">getSystemMessage</code></a> retrieves the appropriate system message based on the requested personality type.</li>
+<li><a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L95" target="_blank" rel="noopener noreferrer"><code class="inline-code">getMedicalJSONSchema</code></a> constructs a JSON schema for validating and structuring medical data.</li>
+</ul>
+<h4>Code</h4>
+<pre><code class="language-typescript">const systemMessages: SystemMessage[] = [
+    {
+        type: &#39;language-coach&#39;,
+        initialInstructions: `Greet the user warmly and ask what language they&#39;d like to learn today. Keep it very brief and friendly.`,
+        message: `You are a helpful language coach that is capable of teaching students different phrases in their chosen language. You will 
+            provide sentences in English, followed by the same sentence in the user&#39;s chosen language.
+
+            RULES:
+            - Provide a pronunciation guide for the sentence in the user&#39;s chosen language.
+            - Surround the English sentence and the language sentence with {{ and }}.
+            - Wait for the user to repeat the sentence back to you. Analyze their pronunciation and provide feedback.
+            `,
+        tools: []
+    },
+    {
+        type: &#39;medical-form&#39;,
+        initialInstructions: `Greet the medical personnel warmly and ask them to provide their patient information. Keep it very brief - 1 sentence only.`,
+        message: `You are helping to edit a JSON object we&#39;ll refer to as &quot;patientData&quot; that represents a medical patient&#39;s personal information, symptoms, and vitals.
+            This JSON object conforms to the following schema: 
+
+            ${getMedicalJSONSchema()}
+
+            RULES:
+            - Listen to the user and collect information from them. Update the JSON object accordingly.
+            - Reply &quot;OK&quot; after processing user input.
+            `,
+        tools: [{
+            type: &#39;function&#39;,
+            name: &#39;get_json_object&#39;,
+            description: &#39;Converts text into a JSON object based upon a JSON schema&#39;,
+            parameters: getMedicalJSONSchema()
+        }]
+    }
+];
+</code></pre>
+<ul>
+<li>Each system message defines the AI&#39;s interaction rules and initial greeting, ensuring tailored user experiences.</li>
+<li>The <code class="inline-code">tools</code> array allows integration of function calls for structured outputs, such as JSON objects for medical data.</li>
+<li>Instructions are detailed, guiding the AI&#39;s behavior step-by-step for consistent and predictable interactions.</li>
+<li>The modular design enables easy addition of new personalities and tools without altering existing configurations.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">export function getSystemMessage(type: string): SystemMessage | null {
+    const systemMessage = systemMessages.find((systemMessage) =&gt; systemMessage.type === type);
+    return systemMessage || null;
+}
+</code></pre>
+<ul>
+<li>The <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L90" target="_blank" rel="noopener noreferrer"><code class="inline-code">getSystemMessage</code></a> function dynamically retrieves system messages based on the requested personality type.</li>
+<li>This approach ensures flexibility, allowing the system to adapt to different user needs in real-time.</li>
+<li>The use of <code class="inline-code">find</code> simplifies lookup operations, maintaining code readability and efficiency.</li>
+<li>Returning <code class="inline-code">null</code> for unmatched types provides a safeguard against invalid requests.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">function getMedicalJSONSchema() {
+    return {
+        type: &#39;object&#39;,
+        properties: {
+            tab: { type: &#39;string&#39;, enum: [&#39;patient&#39;, &#39;symptoms&#39;, &#39;vitals&#39;] },
+            information: {
+                type: &#39;object&#39;,
+                properties: {
+                    name: { type: &#39;string&#39; },
+                    age: { type: &#39;string&#39; },
+                    gender: { type: &#39;string&#39;, enum: [&#39;male&#39;, &#39;female&#39;] },
+                    historyPastMedical: { type: &#39;string&#39; },
+                    historyOfPresentIllness: { type: &#39;string&#39; }
+                },
+                required: [&#39;name&#39;, &#39;age&#39;, &#39;gender&#39;]
+            },
+            symptoms: {
+                type: &#39;array&#39;,
+                items: {
+                    type: &#39;object&#39;,
+                    properties: {
+                        id: { type: &#39;number&#39; },
+                        description: { type: &#39;string&#39; },
+                        duration: { type: &#39;string&#39; },
+                        severity: { type: &#39;number&#39; }
+                    },
+                    required: [&#39;id&#39;, &#39;description&#39;, &#39;duration&#39;, &#39;severity&#39;]
+                }
+            },
+            vitals: {
+                type: &#39;object&#39;,
+                properties: {
+                    temperature: { type: &#39;number&#39; },
+                    bloodPressure: { type: &#39;string&#39; },
+                    heartRate: { type: &#39;number&#39; }
+                },
+                required: [&#39;temperature&#39;, &#39;bloodPressure&#39;, &#39;heartRate&#39;]
+            }
+        },
+        required: [&#39;tab&#39;, &#39;information&#39;, &#39;symptoms&#39;, &#39;vitals&#39;]
+    };
+}
+</code></pre>
+<ul>
+<li>The <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L95" target="_blank" rel="noopener noreferrer"><code class="inline-code">getMedicalJSONSchema</code></a> function constructs a detailed schema for medical data validation, ensuring consistency and accuracy.</li>
+<li>JSON schema properties define expected data types and required fields, reducing the risk of malformed data.</li>
+<li>Enum values for <code class="inline-code">tab</code> standardize user inputs, simplifying downstream processing.</li>
+<li>Nested structures for <code class="inline-code">information</code>, <code class="inline-code">symptoms</code>, and <code class="inline-code">vitals</code> enable comprehensive data representation.</li>
+</ul>
+<hr>
+<h3><span class="header-prefix">File:</span> <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/types.ts" target="_blank" rel="noopener noreferrer"><code class="inline-code">server/src/types.ts</code></a></h3>
+<p>This file provides TypeScript type definitions for system messages, tools, and WebSocket communication. These types enforce structure and consistency across the codebase, ensuring reliable interactions between components.</p>
+<h4>Highlights</h4>
+<ul>
+<li><code class="inline-code">WSMessage</code> defines the structure of WebSocket messages, including control actions and user messages.</li>
+<li><code class="inline-code">SystemMessage</code> outlines the configuration of AI personalities, including their types, instructions, and tools.</li>
+<li><code class="inline-code">AudioMetrics</code> tracks performance metrics for audio processing, aiding diagnostics and optimization.</li>
+</ul>
+<h4>Code</h4>
+<pre><code class="language-typescript">export type WSMessage =
+    | { id: string; type: &#39;text_delta&#39;; delta: string }
+    | { id?: string; type: &#39;transcription&#39;; text: string }
+    | { id: string; type: &#39;user_message&#39;; text: string }
+    | { type: &#39;control&#39;; action: &#39;speech_started&#39; | &#39;connected&#39; | &#39;text_done&#39; | &#39;function_call_output&#39;; functionCallParams?: string; id?: string }
+    | { type: &#39;control&#39;; action: &#39;session_created&#39;; id?: string }
+    | { type: &#39;control&#39;; action: &#39;error&#39;; error: OpenAIError; id?: string }
+    | { type: &#39;control&#39;; action: &#39;rate_limits_updated&#39;; rateLimits: RateLimits; id?: string };
+</code></pre>
+<ul>
+<li>The <code class="inline-code">WSMessage</code> type defines all possible WebSocket message formats, ensuring consistency in communication protocols.</li>
+<li>Control actions such as <code class="inline-code">speech_started</code> and <code class="inline-code">session_created</code> facilitate real-time session management.</li>
+<li>Optional fields like <code class="inline-code">functionCallParams</code> allow flexibility for specific message types.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">export type SystemMessage = {
+    type: &#39;language-coach&#39; | &#39;medical-form&#39; | &#39;medical-question-answer&#39;;
+    initialInstructions: string;
+    message: string;
+    tools?: SystemMessageTool[];
+};
+</code></pre>
+<ul>
+<li>The <code class="inline-code">SystemMessage</code> type encapsulates AI personality configurations, including instructions and optional tools.</li>
+<li>The <code class="inline-code">type</code> field enables dynamic personality switching based on user needs.</li>
+<li>The modular design supports extensibility, allowing new personalities to be added seamlessly.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">export type AudioMetrics = {
+    totalBytesSent: number;
+    totalBatchesSent: number;
+    maxBatchSize: number;
+    lastSendTime: number;
+    droppedChunks: number;
+    avgLatency: number;
+    lastResponseTime: number;
+    sessionStartTime: number;
+    totalResponses: number;
+};
+</code></pre>
+<ul>
+<li>The <code class="inline-code">AudioMetrics</code> type tracks key performance indicators for audio processing, enabling diagnostics and optimization.</li>
+<li>Metrics such as <code class="inline-code">avgLatency</code> and <code class="inline-code">droppedChunks</code> provide insights into system performance under varying conditions.</li>
+<li>This structured approach aids in identifying bottlenecks and improving user experience.</li>
+</ul>
+<hr>
+<h2>Helpful Hints</h2>
+<ul>
+<li>Explore how <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L90" target="_blank" rel="noopener noreferrer"><code class="inline-code">getSystemMessage</code></a> dynamically retrieves configurations to support diverse AI personalities.</li>
+<li>Study the JSON schema in <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L95" target="_blank" rel="noopener noreferrer"><code class="inline-code">getMedicalJSONSchema</code></a> to understand how structured data is validated and processed.</li>
+<li>Analyze the <code class="inline-code">WSMessage</code> type to learn how WebSocket protocols are standardized across the system.</li>
+</ul>
+<h2>Try This</h2>
+<p>Challenge yourself to deepen your understanding:</p>
+<ol>
+<li><p><strong>Add a New Personality</strong>: Define a new system message for a &quot;Travel Assistant&quot; that provides travel tips and suggestions based on user queries. Implement the necessary tools and instructions.</p>
+<ul>
+<li>Example: Add a tool for retrieving weather data and integrate it into the assistant&#39;s responses.</li>
+</ul>
+</li>
+<li><p><strong>Trace Message Flow</strong>: Add logging statements in <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L90" target="_blank" rel="noopener noreferrer"><code class="inline-code">getSystemMessage</code></a> and <code class="inline-code">systemMessages</code> to trace how system messages are selected and used. Observe the flow during real-time interactions.</p>
+</li>
+<li><p><strong>Extend JSON Schema</strong>: Modify <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L95" target="_blank" rel="noopener noreferrer"><code class="inline-code">getMedicalJSONSchema</code></a> to include additional fields, such as allergies or medications. Ensure the schema remains valid and test its integration with the Medical Form Assistant.</p>
+</li>
+</ol>
+<hr>
+<p>Excellent work! Continue to the next quest to uncover more mysteries in the realm of real-time AI applications.</p>
+<p>Quest &#39;AI Personality System Messages&#39; successfully executed with zero runtime errors—20% milestone achieved; keep refactoring brilliance into your codebase and watch your progress compile to perfection! 🚀⚡💎</p>
+
+</div>
+
+
+      <div class="quest-navigation quest-navigation-bottom">
+        <a href="quest-1.html" class="prev-quest-btn">← Previous: Quest 1</a>
+        <a href="quest-3.html" class="next-quest-btn">Next: Quest 3 →</a>
+      </div>
+    
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <span>Created using <a href="https://github.com/DanWahlin/ai-repo-adventures" target="_blank" rel="noopener noreferrer" class="repo-link">AI Repo Adventures</a></span>
+        </div>
+    </footer>
+    
+    <!-- Quest Navigator Script (for navbar Quests button functionality) -->
+    <script src="../assets/shared/quest-navigator.js"></script>
+    <!-- Theme Toggle Script (for light/dark mode toggle) -->
+    <script src="../assets/theme-toggle.js"></script>
+</body>
+</html>

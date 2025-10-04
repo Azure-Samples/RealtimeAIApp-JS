@@ -1,0 +1,31 @@
+{
+  "name": "realtimeaiapp-js",
+  "version": "1.0.0",
+  "description": "Realtime OpenAI demo showing real-time text and speech. Learn a language or complete a form using your voice.",
+  "keywords": [
+    "realtime",
+    "ai",
+    "ai-foundry",
+    "websockets",
+    "typescript"
+  ],
+  "homepage": "https://github.com/DanWahlin/RealtimeAIApp-JS#readme",
+  "bugs": {
+    "url": "https://github.com/DanWahlin/RealtimeAIApp-JS/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanWahlin/RealtimeAIApp-JS.git"
+  },
+  "license": "MIT",
+  "author": "Dan Wahlin",
+  "type": "module",
+  "scripts": {
+    "deploy": "gh-pages -d public",
+    "repo-adventures": "repo-adventures --theme all --output ./public --overwrite" 
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "@codewithdan/ai-repo-adventures-generator": "1.10.3"
+  }
+}

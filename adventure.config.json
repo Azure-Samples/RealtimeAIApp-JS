@@ -1,0 +1,232 @@
+{
+  "adventure": {
+    "name": "RealtimeAI Application",
+    "description": "A real-time AI application using OpenAI's Realtime API with WebSocket connections for audio streaming. Features language coaching and medical form voice-to-JSON conversion.",
+    "url": "https://github.com/danwahlin/RealtimeAIApp-JS",
+    "customInstructions": "This codebase demonstrates real-time audio streaming between a client and OpenAI's Realtime API. Focus on understanding the WebSocket communication flow, audio processing pipeline, and how the system handles bidirectional streaming with different AI personalities.",
+    "microsoftClarityCode": "tk53e05gf2",
+    "googleAnalyticsCode": "",
+    "quests": [
+      {
+        "title": "WebSocket Server & Session Management",
+        "description": "Explore how the server manages WebSocket connections and real-time sessions between clients and OpenAI's Realtime API",
+        "files": [
+          {
+            "path": "server/src/server.ts",
+            "description": "Express server with WebSocket upgrade handling that initializes RTSession instances for each client connection",
+            "highlights": [
+              {
+                "name": "server.on('upgrade')",
+                "description": "Handles WebSocket upgrade requests on the /realtime endpoint, creating secure WebSocket connections"
+              },
+              {
+                "name": "wss.on('connection')",
+                "description": "Manages new client connections, processes init messages with system message type, and creates RTSession instances"
+              },
+              {
+                "name": "handleSocketEvent",
+                "description": "Central event handler for WebSocket message, error, and close events with proper cleanup"
+              }
+            ]
+          },
+          {
+            "path": "server/src/session.ts",
+            "description": "Core session handler managing dual WebSocket connections (client and OpenAI), audio streaming, and message routing",
+            "highlights": [
+              {
+                "name": "RTSession.constructor",
+                "description": "Initializes a real-time session with system message configuration and establishes OpenAI WebSocket connection"
+              },
+              {
+                "name": "initializeRealtimeWebSocket",
+                "description": "Creates authenticated WebSocket connection to OpenAI Realtime API with Azure or OpenAI provider support"
+              },
+              {
+                "name": "handleRealtimeMessage",
+                "description": "Routes OpenAI Realtime API events using a handler map for session creation, audio deltas, transcriptions, and function calls"
+              },
+              {
+                "name": "flushAudioBuffer",
+                "description": "Batches and sends audio data to OpenAI with backpressure handling and performance metrics tracking"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "AI Personality System Messages",
+        "description": "Understand how different AI personalities and behaviors are configured through system messages",
+        "files": [
+          {
+            "path": "server/src/systemMessages.ts",
+            "description": "Defines AI personalities for language coaching, medical form filling, and Q&A with system prompts and function definitions",
+            "highlights": [
+              {
+                "name": "systemMessages",
+                "description": "Array of system message configurations for language-coach, medical-form, and medical-question-answer modes"
+              },
+              {
+                "name": "getSystemMessage",
+                "description": "Retrieves the appropriate system message configuration based on the requested type"
+              },
+              {
+                "name": "getMedicalJSONSchema",
+                "description": "Defines JSON schema for medical form function calling with patient information, symptoms, and vitals structure"
+              }
+            ]
+          },
+          {
+            "path": "server/src/types.ts",
+            "description": "TypeScript type definitions for WebSocket messages, system configurations, and OpenAI API structures",
+            "highlights": [
+              {
+                "name": "WSMessage",
+                "description": "Union type defining all WebSocket message formats including text_delta, transcription, control actions, and errors"
+              },
+              {
+                "name": "SystemMessage",
+                "description": "Type definition for AI personality configuration with initial instructions, system message, and optional tools"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Client-Side Real-Time Coordination",
+        "description": "Learn how the client orchestrates WebSocket communication, audio recording, and playback services",
+        "files": [
+          {
+            "path": "client/src/app/core/realtime-manager.service.ts",
+            "description": "Central service coordinating WebSocket communication, audio recording/playback, state management, and message handling",
+            "highlights": [
+              {
+                "name": "connect",
+                "description": "Establishes WebSocket connection with system message type, initializes audio player, and sets up subscriptions"
+              },
+              {
+                "name": "handleWebSocketMessage",
+                "description": "Processes incoming WebSocket messages, routing text messages to handleWSMessage and binary audio to player"
+              },
+              {
+                "name": "handleWSMessage",
+                "description": "Handles transcriptions, text deltas, control actions (speech_started, function_call_output, session_created, errors)"
+              },
+              {
+                "name": "handleAudioRecord",
+                "description": "Manages audio recording lifecycle with getUserMedia, sets up data callback to stream audio to WebSocket"
+              }
+            ]
+          },
+          {
+            "path": "client/src/app/core/web-socket.service.ts",
+            "description": "Low-level WebSocket communication service handling binary and text message transmission",
+            "highlights": [
+              {
+                "name": "connect",
+                "description": "Creates WebSocket connection with arraybuffer binary type and sends init message with system message type"
+              },
+              {
+                "name": "socket.onmessage",
+                "description": "Distinguishes between binary (audio) and text (JSON) messages, queuing them for processing"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Audio Processing Pipeline",
+        "description": "Discover how audio is captured, converted to PCM16 format, and played back using Web Audio API worklets",
+        "files": [
+          {
+            "path": "client/src/app/core/recorder.service.ts",
+            "description": "Audio capture service using AudioWorklet to convert microphone input to PCM16 format at 24kHz",
+            "highlights": [
+              {
+                "name": "start",
+                "description": "Initializes AudioContext at 24kHz, creates MediaStreamSource, and registers recorder-worklet for audio processing"
+              },
+              {
+                "name": "RecorderPCMProcessor",
+                "description": "AudioWorklet processor that converts Float32 audio samples to Int16 PCM format for WebSocket transmission"
+              },
+              {
+                "name": "convertFloat32ToInt16",
+                "description": "Converts normalized float audio samples to 16-bit signed integers with proper clamping"
+              }
+            ]
+          },
+          {
+            "path": "client/src/app/core/player.service.ts",
+            "description": "Audio playback service using AudioWorklet to play Int16 PCM audio received from OpenAI",
+            "highlights": [
+              {
+                "name": "init",
+                "description": "Creates AudioContext at specified sample rate and registers playback-worklet for real-time audio streaming"
+              },
+              {
+                "name": "play",
+                "description": "Streams Int16 audio buffers to the playback worklet for immediate playback"
+              },
+              {
+                "name": "PlaybackProcessor",
+                "description": "AudioWorklet processor that buffers incoming Int16 audio and converts to Float32 for speaker output"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Feature Components & Routing",
+        "description": "Explore the Angular components implementing language coaching and medical form features with lazy loading",
+        "files": [
+          {
+            "path": "client/src/app/app.routes.ts",
+            "description": "Angular route configuration with lazy-loaded components for language-coach and medical-form features",
+            "highlights": [
+              {
+                "name": "routes",
+                "description": "Route definitions with lazy loading for LanguageCoachComponent and MedicalFormComponent using dynamic imports"
+              }
+            ]
+          },
+          {
+            "path": "client/src/app/medical-form/medical-form.component.ts",
+            "description": "Medical form component handling voice-to-JSON conversion with function calling, proxy-based state management, and form synchronization",
+            "highlights": [
+              {
+                "name": "onMessagesChanged",
+                "description": "Processes function_call_output messages from OpenAI, parses JSON patient data, and updates form with merged model"
+              },
+              {
+                "name": "onPatientChanged",
+                "description": "Debounced callback triggered by proxy when form data changes, sends updated patient JSON to AI assistant"
+              },
+              {
+                "name": "mergeModel",
+                "description": "Intelligently merges partial patient updates from AI with existing form data, preserving user input"
+              },
+              {
+                "name": "createProxy",
+                "description": "Creates deep proxy wrapper around patient object to track nested changes and trigger onPatientChanged callback"
+              }
+            ]
+          },
+          {
+            "path": "client/src/app/language-coach/language-coach.component.ts",
+            "description": "Language coaching component providing interactive language learning with pronunciation feedback",
+            "highlights": [
+              {
+                "name": "systemMessageType",
+                "description": "Sets the AI personality to 'language-coach' for interactive language learning sessions"
+              },
+              {
+                "name": "onMessagesChanged",
+                "description": "Receives and displays conversation messages including English phrases, translations, and pronunciation guidance"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

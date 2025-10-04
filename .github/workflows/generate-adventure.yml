@@ -1,0 +1,54 @@
+name: Generate Repo Adventure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-adventures:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'update-adventures')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install AI Repo Adventure Generator
+        run: npm install -g @codewithdan/ai-repo-adventures-generator
+
+      - name: Configure git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Generate repo adventures
+        env:
+          REPO_ADV_LLM_API_KEY: ${{ secrets.REPO_ADV_LLM_API_KEY }}
+          REPO_ADV_LLM_BASE_URL: ${{ secrets.REPO_ADV_LLM_BASE_URL }}
+          REPO_ADV_LLM_MODEL: ${{ secrets.REPO_ADV_LLM_MODEL }}
+          REPO_ADV_LLM_API_VERSION: ${{ secrets.REPO_ADV_LLM_API_VERSION }}
+        run: repo-adventures --theme all --output ./public/examples --overwrite
+
+      - name: Publish generated files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx gh-pages -d public/examples --dest examples --repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Commit generated files
+        run: |
+          git add public/examples
+          git diff --staged --quiet || git commit -m "chore: update generated repo adventures"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

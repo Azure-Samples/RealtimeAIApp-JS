@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Deck Operations - Repo Adventure</title>
+    <link rel="stylesheet" href="assets/theme.css">
+    <link rel="stylesheet" href="../assets/shared/quest-navigator.css">
+    <link rel="stylesheet" href="../assets/theme-toggle.css">
+    
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "tk53e05gf2");
+    </script>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <!-- Using minimal theme since we override all styles with our custom theme -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Configure Prism autoloader for syntax highlighting
+        if (window.Prism && window.Prism.plugins && window.Prism.plugins.autoloader) {
+            window.Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/';
+        }
+
+        // Trigger Prism highlighting after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Prism) {
+                window.Prism.highlightAll();
+            }
+        });
+    </script>
+</head>
+<body class="theme-space">
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-left">
+                <a href="https://github.com/danwahlin/RealtimeAIApp-JS" target="_blank" rel="noopener noreferrer" class="github-link">
+                    <img src="../assets/shared/github-mark-white.svg" alt="GitHub" width="24" height="24">
+                </a>
+                <a href="index.html">The Galactic AI Navigator</a>
+            </div>
+            <div class="nav-middle">
+            </div>
+            <div class="nav-right">
+                <a href="../index.html" class="nav-link">Change Adventure</a>
+                <a href="#" class="nav-link quest-map-trigger">Quests</a>
+                <button class="theme-toggle-btn" aria-label="Switch to light mode" type="button">
+                    <div class="theme-toggle-slider">
+                        <svg class="toggle-icon sun-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="toggle-icon moon-icon" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="quest-content">
+    <h1>Quest 1: Command Deck Operations</h1>
+<hr>
+<p>Aboard the starship <em>Galactic Navigator</em>, the Command Deck hums with activity as the crew prepares for interstellar communication. The WebSocket systems are the lifeblood of the ship&#39;s AI-powered operations, enabling seamless interaction between the crew and the ship&#39;s advanced AI personalities. Your mission is to ensure the Command Deck operates flawlessly, managing real-time audio streams, handling critical WebSocket events, and maintaining the ship&#39;s connection with the Azure and OpenAI Realtime APIs.</p>
+<h2>Key Takeaways</h2>
+<p>After completing this quest, you will understand:</p>
+<ul>
+<li>🎯 <strong>WebSocket Upgrade Flow</strong>: How the server upgrades HTTP connections to WebSocket for real-time communication.</li>
+<li>🔍 <strong>Session Initialization</strong>: How the RTSession class establishes connections and configures AI personalities.</li>
+<li>⚡ <strong>Audio Buffer Management</strong>: Techniques for batching audio data efficiently while handling backpressure.</li>
+<li>💡 <strong>Event Handling Patterns</strong>: How event-driven architectures manage complex communication flows.</li>
+</ul>
+<h2>File Exploration</h2>
+<h3><span class="header-prefix">File:</span> <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/server.ts" target="_blank" rel="noopener noreferrer"><code class="inline-code">server/src/server.ts</code></a></h3>
+<p>The <code class="inline-code">server.ts</code> file serves as the entry point for the Command Deck&#39;s WebSocket server. It handles connection upgrades, initializes RTSession instances, and manages WebSocket lifecycle events. This file demonstrates foundational patterns for real-time communication systems, including middleware usage, error handling, and structured logging.</p>
+<h4>Highlights</h4>
+<ul>
+<li><code class="inline-code">server.on(&#39;upgrade&#39;)</code>: Handles HTTP-to-WebSocket upgrades, validating paths and initiating connections.</li>
+<li><code class="inline-code">wss.on(&#39;connection&#39;)</code>: Manages new WebSocket connections and initializes RTSession instances.</li>
+<li><a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/server.ts#L39" target="_blank" rel="noopener noreferrer"><code class="inline-code">handleSocketEvent</code></a>: Processes WebSocket events such as messages, errors, and closures.</li>
+</ul>
+<h4>Code</h4>
+<pre><code class="language-typescript">server.on(&#39;upgrade&#39;, (request, socket, head) =&gt; {
+  const { pathname } = new URL(request.url!, `http://${request.headers.host}`);
+  if (pathname === &#39;/realtime&#39;) {
+    logger.debug({ pathname }, &#39;Handling WebSocket upgrade request&#39;);
+    wss.handleUpgrade(request, socket, head, (ws) =&gt; {
+      logger.debug(&#39;WebSocket upgrade successful&#39;);
+      wss.emit(&#39;connection&#39;, ws, request);
+    });
+  } else {
+    logger.warn({ pathname }, &#39;Invalid WebSocket path - destroying connection&#39;);
+    socket.destroy();
+  }
+});
+</code></pre>
+<ul>
+<li>This code validates WebSocket upgrade requests, ensuring only authorized paths are processed.</li>
+<li>The <code class="inline-code">handleUpgrade</code> method transitions HTTP requests to WebSocket connections, enabling real-time communication.</li>
+<li>Logging provides visibility into upgrade attempts, aiding debugging and monitoring.</li>
+<li>The path validation prevents unauthorized access, enhancing security.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">wss.on(&#39;connection&#39;, (ws: WebSocket) =&gt; {
+  logger.info(&#39;🟢 New Client websocket connection opened&#39;);
+  let rtSession: RTSession | null = null;
+
+  const handleSocketEvent = (eventType: string, data?: any) =&gt; {
+    switch (eventType) {
+      case &#39;message&#39;:
+        if (!data) {
+          logger.warn(&#39;Received empty message&#39;);
+          return;
+        }
+
+        try {
+          const messageText = data.toString();
+          const initSystemMessage = JSON.parse(messageText);
+
+          if (initSystemMessage.type === &#39;init&#39;) {
+            if (rtSession) {
+              logger.warn(&#39;🟠 RTSession already exists - ignoring duplicate init&#39;);
+              return;
+            }
+
+            logger.info(&#39;🔄 Initializing RTSession&#39;);
+            const systemMessage = getSystemMessage(initSystemMessage.systemMessageType);
+            logger.info({ systemMessage }, &#39;✅ System message retrieved&#39;);
+            
+            rtSession = new RTSession(ws, logger, systemMessage);
+            ws.off(&#39;message&#39;, messageHandler);
+          }
+        } catch (error) {
+          logger.error({ error, message: data.toString() }, &#39;🔥 Failed to process message&#39;);
+        }
+        break;
+
+      case &#39;error&#39;:
+        logger.error({ error: data }, &#39;🔥 WebSocket error occurred&#39;);
+        rtSession?.dispose();
+        rtSession = null;
+        break;
+
+      case &#39;close&#39;:
+        logger.info(&#39;🔴 WebSocket connection closed&#39;);
+        rtSession?.dispose();
+        rtSession = null;
+        break;
+    }
+  };
+
+  const messageHandler = (message: any) =&gt; handleSocketEvent(&#39;message&#39;, message);
+
+  ws.on(&#39;message&#39;, messageHandler);
+  ws.on(&#39;error&#39;, (error: Error) =&gt; handleSocketEvent(&#39;error&#39;, error));
+  ws.on(&#39;close&#39;, () =&gt; handleSocketEvent(&#39;close&#39;));
+});
+</code></pre>
+<ul>
+<li>The <code class="inline-code">connection</code> event initializes RTSession instances, linking WebSocket clients to AI personalities.</li>
+<li>Event handlers (<code class="inline-code">message</code>, <code class="inline-code">error</code>, <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/client/src/app/core/web-socket.service.ts#L80" target="_blank" rel="noopener noreferrer"><code class="inline-code">close</code></a>) manage the WebSocket lifecycle, ensuring stability.</li>
+<li>Defensive programming prevents duplicate session initialization, reducing resource conflicts.</li>
+<li>Error handling ensures graceful recovery from WebSocket issues.</li>
+</ul>
+<hr>
+<h3><span class="header-prefix">File:</span> <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/session.ts" target="_blank" rel="noopener noreferrer"><code class="inline-code">server/src/session.ts</code></a></h3>
+<p>The <code class="inline-code">session.ts</code> file contains the <code class="inline-code">RTSession</code> class, which orchestrates communication between the ship&#39;s WebSocket server and the OpenAI Realtime API. This module handles session initialization, audio buffering, and event-driven message processing.</p>
+<h4>Highlights</h4>
+<ul>
+<li><code class="inline-code">RTSession.constructor</code>: Initializes session configurations and establishes WebSocket connections.</li>
+<li><a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/session.ts#L131" target="_blank" rel="noopener noreferrer"><code class="inline-code">initializeRealtimeWebSocket</code></a>: Sets up connections to Azure or OpenAI Realtime APIs.</li>
+<li><code class="inline-code">flushAudioBuffer</code>: Manages audio batching and transmission, optimizing performance.</li>
+</ul>
+<h4>Code</h4>
+<pre><code class="language-typescript">constructor(
+  private readonly clientWs: WebSocket,
+  private readonly logger: Logger,
+  private systemMessage: SystemMessage | null
+) {
+  if (!this.systemMessage) throw new Error(&#39;🔥 System message is required&#39;);
+
+  this.logger = logger.child({ sessionId: this.sessionId });
+  this.logger.info({ message: this.systemMessage.message }, &#39;✅ Init message received&#39;);
+  this.initialize().catch((error) =&gt; this.logger.error({ error }, &#39;🔥 Failed to initialize session&#39;));
+}
+</code></pre>
+<ul>
+<li>The constructor validates system messages and initializes session-specific configurations.</li>
+<li>Dependency injection (<code class="inline-code">clientWs</code>, <code class="inline-code">logger</code>, <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/systemMessages.ts#L91" target="_blank" rel="noopener noreferrer"><code class="inline-code">systemMessage</code></a>) enables modular design and testing.</li>
+<li>Logging provides transparency during initialization, aiding diagnostics.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">private async initializeRealtimeWebSocket(): Promise&lt;WebSocket&gt; {
+  const url = BACKEND === &#39;azure&#39;
+    ? `${OPENAI_ENDPOINT.replace(&#39;https://&#39;, &#39;wss://&#39;)}/openai/realtime?deployment=${OPENAI_MODEL}&amp;api-version=${OPENAI_API_VERSION}`
+    : this.openAIWsUrl;
+
+  this.logger.info(`🔌 Connecting to OpenAI WebSocket at ${url}`);
+
+  return new Promise(async (resolve, reject) =&gt; {
+    const headers = await this.getWebSocketHeaders();
+    const openAIWs = new WebSocket(url, { headers });
+
+    openAIWs.on(&#39;open&#39;, () =&gt; {
+      this.logger.info(&#39;🟢 OpenAI WebSocket connection opened&#39;);
+      resolve(openAIWs);
+    });
+
+    openAIWs.on(&#39;error&#39;, (error) =&gt; {
+      console.log(error);
+      reject(error);
+    });
+  });
+}
+</code></pre>
+<ul>
+<li>This code dynamically selects the WebSocket endpoint based on the backend configuration (<code class="inline-code">Azure</code> or <code class="inline-code">OpenAI</code>).</li>
+<li>Headers are retrieved securely, supporting managed identity or API key authentication.</li>
+<li>Event handlers (<code class="inline-code">open</code>, <code class="inline-code">error</code>) ensure proper connection management and error reporting.</li>
+</ul>
+<hr>
+<pre><code class="language-typescript">private flushAudioBuffer() {
+  this.audioBufferTimer = null;
+
+  if (this.audioBufferQueue.length === 0 || !this.openAIWs || this.openAIWs.readyState !== WebSocket.OPEN) {
+    this.clearAudioQueue();
+    return;
+  }
+
+  try {
+    const totalSize = this.currentBufferSize;
+    const combinedBuffer = this.combineAudioBuffers(totalSize);
+
+    this.clearAudioQueue();
+
+    const sendStart = performance.now();
+    this.sendAudioToOpenAI(combinedBuffer, totalSize);
+    const sendDuration = performance.now() - sendStart;
+
+    this.updateAudioMetrics(totalSize, sendDuration);
+  } catch (error) {
+    this.logger.error({ error }, &#39;🔥 Error while flushing audio buffer&#39;);
+    this.clearAudioQueue();
+  }
+}
+</code></pre>
+<ul>
+<li>Audio data is batched for efficient transmission, reducing WebSocket overhead.</li>
+<li>Backpressure handling prevents resource saturation and ensures smooth streaming.</li>
+<li>Metrics tracking provides insights into performance and potential bottlenecks.</li>
+</ul>
+<hr>
+<h2>Helpful Hints</h2>
+<ul>
+<li>Review how <code class="inline-code">server.on(&#39;upgrade&#39;)</code> validates paths to prevent unauthorized WebSocket connections.</li>
+<li>Study how <code class="inline-code">flushAudioBuffer</code> balances performance and reliability through batching and backpressure handling.</li>
+<li>Explore how <code class="inline-code">RTSession</code> uses dependency injection to maintain modularity and testability.</li>
+</ul>
+<h2>Try This</h2>
+<p>Challenge yourself to deepen your understanding:</p>
+<ol>
+<li><p><strong>Add Custom Logging</strong>: Enhance the logging in <code class="inline-code">flushAudioBuffer</code> to include average audio batch size and transmission duration. This will help you analyze performance trends.</p>
+</li>
+<li><p><strong>Trace Session Flow</strong>: Add console logs in <code class="inline-code">RTSession.constructor</code> and <a href="https://github.com/danwahlin/RealtimeAIApp-JS/blob/main/server/src/session.ts#L131" target="_blank" rel="noopener noreferrer"><code class="inline-code">initializeRealtimeWebSocket</code></a> to trace the complete session initialization process. Observe how dependencies are injected and connections are established.</p>
+</li>
+<li><p><strong>Optimize Buffering</strong>: Modify the <code class="inline-code">BATCH_INTERVAL_MS</code> and <code class="inline-code">MAX_BUFFER_SIZE</code> values in <code class="inline-code">session.ts</code> to experiment with different audio batching configurations. Measure the impact on latency and throughput.</p>
+</li>
+</ol>
+<hr>
+<p>Excellent work! Continue to the next quest to uncover more mysteries of the starship&#39;s systems.</p>
+<p>Stellar work completing &#39;Command Deck Operations&#39;—your mission control skills are now light-years ahead, propelling you toward cosmic mastery! 🚀⭐⚡</p>
+
+</div>
+
+
+      <div class="quest-navigation quest-navigation-bottom nav-next-only">
+        <a href="quest-2.html" class="next-quest-btn">Next: Quest 2 →</a>
+      </div>
+    
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <span>Created using <a href="https://github.com/DanWahlin/ai-repo-adventures" target="_blank" rel="noopener noreferrer" class="repo-link">AI Repo Adventures</a></span>
+        </div>
+    </footer>
+    
+    <!-- Quest Navigator Script (for navbar Quests button functionality) -->
+    <script src="../assets/shared/quest-navigator.js"></script>
+    <!-- Theme Toggle Script (for light/dark mode toggle) -->
+    <script src="../assets/theme-toggle.js"></script>
+</body>
+</html>
